@@ -37,7 +37,13 @@ class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
             self.banned_storage.open_spider(spider)
         if self.request_error_storage:
             self.request_error_storage.open_spider(spider)
-        logger.info('Spider opened: {spider_name}'.format(spider_name=spider.name))
+        logger.info('{middleware} opend {plugin}'.format(
+            middleware=self.__class__.__name__,
+            plugin='with plugin: {} {}'.format(
+                self.request_error_storage.__class__.__name__+',' if self.request_error_storage else '',
+                self.banned_storage.__class__.__name__ if self.banned_storage else ''
+            )
+        )) if any((self.request_error_storage, self.banned_storage)) else ''
 
     def spider_closed(self, spider):
         self.storage.close_spider(spider)
@@ -45,7 +51,7 @@ class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
             self.banned_storage.close_spider(spider)
         if self.request_error_storage:
             self.request_error_storage.close_spider(spider)
-        logger.info('Spider closed: {spider_name}'.format(spider_name=spider.name))
+        logger.info('{middleware} closed'.format(middleware=self.__class__.__name__))
 
 
     @defer.inlineCallbacks

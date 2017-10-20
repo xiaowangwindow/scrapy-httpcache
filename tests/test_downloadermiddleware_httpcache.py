@@ -166,6 +166,12 @@ class FilesystemStorageGzipTest(FilesystemStorageTest):
 #     pytest.importorskip('leveldb')
 #     storage_class = 'scrapy.extensions.httpcache.LeveldbCacheStorage'
 
+# class RequestErrorStorageTest(DefaultStorageTest):
+#     pass
+#
+# class BannedStorageTest(DefaultStorageTest):
+#     pass
+
 
 class DummyPolicyTest(_BaseTest):
     policy_class = 'scrapy.extensions.httpcache.DummyPolicy'
