@@ -51,20 +51,24 @@ In settings.py, for example::
     HTTPCACHE_ENABLED = True
     HTTPCACHE_IGNORE_HTTP_CODES = [301, 302, 500, 503]
     HTTPCACHE_STORAGE = 'scrapy_httpcache.extensions.httpcache_storage.MongoDBCacheStorage'
-    HTTPCACHE_MONGODB_STORAGE_URI = 'mongodb://127.0.0.1:27017'
-    HTTPCACHE_MONGODB_STORAGE_DB = MONGODB_DATABASE
+    HTTPCACHE_MONGODB_HOST = '127.0.0.1'
+    HTTPCACHE_MONGODB_PORT = 27017
+    HTTPCACHE_MONGODB_USERNAME = 'root'
+    HTTPCACHE_MONGODB_PASSWORD = 'password'
+    HTTPCACHE_MONGODB_AUTH_DB = 'admin'
+    HTTPCACHE_MONGODB_STORAGE_DB = 'cache_storage'
     HTTPCACHE_MONGODB_STORAGE_COLL = 'cache'
 
     # -----------------------------------------------------------------------------
     # SCRAPY HTTPCACHE BANNED SETTINGS (optional)
     # -----------------------------------------------------------------------------
     BANNED_STORAGE = 'scrapy_httpcache.extensions.banned_storage.MongoBannedStorage'
-    BANNED_MONGODB_STORAGE_URI = 'mongodb://127.0.0.1:27017'
-    BANNED_MONGODB_STORAGE_DB = MONGODB_DATABASE
 
     # -----------------------------------------------------------------------------
     # SCRAPY HTTPCACHE REQUEST ERROR SETTINGS (optional)
     # -----------------------------------------------------------------------------
     REQUEST_ERROR_STORAGE = 'scrapy_httpcache.extensions.request_error_storage.MongoRequestErrorStorage'
-    REQUEST_ERROR_MONGODB_STORAGE_URI = 'mongodb://127.0.0.1:27017'
-    REQUEST_ERROR_MONGODB_STORAGE_DB = MONGODB_DATABASE
+
+If you want to remove banned response, send signal to `scrapy_httpcache.signals.remove_banned`,
+whose callback function accept arguments like (spider, response, exception), return a Deferred.
+

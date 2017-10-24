@@ -11,11 +11,7 @@ class MongoRequestErrorStorage(BaseStorage):
     def __init__(self, settings):
         super().__init__(
             settings,
-            'REQUEST_ERROR_MONGODB_STORAGE_URI',
-            'REQUEST_ERROR_MONGODB_STORAGE_DB',
-            'REQUEST_ERROR_MONGODB_STORAGE_COLL',
-            'REQUEST_ERROR_MONGODB_STORAGE_COLL_INDEX'
-        )
+            'REQUEST_ERROR')
 
     @defer.inlineCallbacks
     def save_request_error(self, spider, request, exception):

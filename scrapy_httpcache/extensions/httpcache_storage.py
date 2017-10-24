@@ -32,10 +32,7 @@ class MongoDBCacheStorage(BaseStorage):
     def __init__(self, settings):
         super(MongoDBCacheStorage, self).__init__(
             settings,
-            'HTTPCACHE_MONGODB_STORAGE_URI',
-            'HTTPCACHE_MONGODB_STORAGE_DB',
-            'HTTPCACHE_MONGODB_STORAGE_COLL',
-            'HTTPCACHE_MONGODB_STORAGE_COLL_INDEX')
+            'HTTPCACHE')
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
         self.db_client = None
 
@@ -57,6 +54,14 @@ class MongoDBCacheStorage(BaseStorage):
             returnValue(response)
         else:
             return response
+
+
+    @defer.inlineCallbacks
+    def remove_response(self, spider, request, response):
+        key = request_util.fingerprint(request)
+        yield self._coll.delete_one(
+            {'fingerprint': key}
+        )
 
     @defer.inlineCallbacks
     def store_response(self, spider, request, response):

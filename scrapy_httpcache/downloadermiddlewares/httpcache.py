@@ -1,12 +1,13 @@
 import logging
 import six
 
-from scrapy import Spider
+from scrapy import Spider, signals
 from scrapy.http import Request, Response
 from scrapy.downloadermiddlewares.httpcache import HttpCacheMiddleware, load_object, \
     NotConfigured, formatdate, IgnoreRequest
 from scrapy.settings import Settings
 from scrapy.utils.request import request_fingerprint
+from scrapy_httpcache import signals as httpcache_signals
 from twisted.internet import defer
 from twisted.internet.defer import returnValue
 
@@ -17,7 +18,16 @@ def check_banned(spider, request, response= None, exception=None):
 
 logger = logging.getLogger(__name__)
 
+
 class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
+    @classmethod
+    def from_crawler(cls, crawler):
+        o = cls(crawler.settings, crawler.stats)
+        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+        crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)
+        crawler.signals.connect(o._remove_banned, signal=httpcache_signals.remove_banned)
+        return o
+
     def __init__(self, settings, stats):
         if not settings.getbool('HTTPCACHE_ENABLED'):
             raise NotConfigured
@@ -174,3 +184,8 @@ class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
         if exception and self.request_error_storage:
             yield self.request_error_storage.save_request_error(spider, request, exception)
 
+    @defer.inlineCallbacks
+    def _remove_banned(self, spider, response, exception, **kwargs):
+        yield self.storage.remove_response(spider, response.request, response)
+        self.stats.inc_value('httpcache/store', count=-1, spider=spider)
+        logger.warning('Remove banned response cache: {}'.format(response.request.url))

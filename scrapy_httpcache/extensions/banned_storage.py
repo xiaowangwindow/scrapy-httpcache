@@ -12,11 +12,7 @@ class MongoBannedStorage(BaseStorage):
     def __init__(self, settings):
         super().__init__(
             settings,
-            'BANNED_MONGODB_STORAGE_URI',
-            'BANNED_MONGODB_STORAGE_DB',
-            'BANNED_MONGODB_STORAGE_COLL',
-            'BANNED_MONGODB_STORAGE_COLL_INDEX'
-        )
+            'BANNED')
 
     @defer.inlineCallbacks
     def save_banned(self, spider, request, response):
