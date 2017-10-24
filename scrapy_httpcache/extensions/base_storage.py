@@ -11,8 +11,6 @@ from scrapy_httpcache.extensions import default_settings
 class BaseStorage(object):
     def __init__(self, settings, settings_prefix):
         self.settings = settings
-        print(type(self.settings))
-        print(self.settings)
         self.settings_prefix = settings_prefix
         db_key = 'HTTPCACHE_MONGODB_DB'
         coll_key = '{}_MONGODB_COLL'.format(self.settings_prefix)
@@ -23,12 +21,9 @@ class BaseStorage(object):
             path=self._gen_mongo_path(),
             options=self._gen_mongo_option()
         )
-        print(self.db_uri)
         self.db_name = settings.get(db_key, getattr(default_settings, db_key))
         self.coll_name = settings.get(coll_key,
                                       getattr(default_settings, coll_key))
-        print(self.db_name)
-        print(self.coll_name)
         if index_key:
             self.db_index = settings.get(index_key,
                                          getattr(default_settings, index_key))
@@ -39,8 +34,7 @@ class BaseStorage(object):
 
     @defer.inlineCallbacks
     def open_spider(self, spider):
-        self._db_client = yield ConnectionPool(self.db_uri, socketTimeoutMS=5000, connectTimeoutMS=1000)
-        self.logger.info('{storage} db opened'.format(storage=self.__class__.__name__))
+        self._db_client = yield ConnectionPool(self.db_uri)
         self._db = self._db_client[self.db_name]
         self._coll = self._db[self.coll_name]
         yield self._coll.find_one(timeout=True)

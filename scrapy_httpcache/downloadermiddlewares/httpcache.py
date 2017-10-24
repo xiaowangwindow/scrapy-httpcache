@@ -25,7 +25,7 @@ class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
         o = cls(crawler.settings, crawler.stats)
         crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
         crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)
-        crawler.signals.connect(o._remove_banned, signal=httpcache_signals.remove_banned)
+        crawler.signals.connect(o.remove_banned, signal=httpcache_signals.remove_banned)
         return o
 
     def __init__(self, settings, stats):
@@ -185,7 +185,7 @@ class AsyncHttpCacheMiddleware(HttpCacheMiddleware):
             yield self.request_error_storage.save_request_error(spider, request, exception)
 
     @defer.inlineCallbacks
-    def _remove_banned(self, spider, response, exception, **kwargs):
+    def remove_banned(self, spider, response, exception, **kwargs):
         yield self.storage.remove_response(spider, response.request, response)
         self.stats.inc_value('httpcache/store', count=-1, spider=spider)
         logger.warning('Remove banned response cache: {}'.format(response.request.url))

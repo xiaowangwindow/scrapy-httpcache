@@ -56,8 +56,8 @@ In settings.py, for example::
     HTTPCACHE_MONGODB_USERNAME = 'root'
     HTTPCACHE_MONGODB_PASSWORD = 'password'
     HTTPCACHE_MONGODB_AUTH_DB = 'admin'
-    HTTPCACHE_MONGODB_STORAGE_DB = 'cache_storage'
-    HTTPCACHE_MONGODB_STORAGE_COLL = 'cache'
+    HTTPCACHE_MONGODB_DB = 'cache_storage'
+    HTTPCACHE_MONGODB_COLL = 'cache'
 
     # -----------------------------------------------------------------------------
     # SCRAPY HTTPCACHE BANNED SETTINGS (optional)
@@ -69,6 +69,5 @@ In settings.py, for example::
     # -----------------------------------------------------------------------------
     REQUEST_ERROR_STORAGE = 'scrapy_httpcache.extensions.request_error_storage.MongoRequestErrorStorage'
 
-If you want to remove banned response, send signal to `scrapy_httpcache.signals.remove_banned`,
-whose callback function accept arguments like (spider, response, exception), return a Deferred.
-
+If you want to remove banned response, use `send_catch_log_deferred` to send signal to `scrapy_httpcache.signals.remove_banned`
+with kwargs contains (spider, response, exception), which callback function return a Deferred.
