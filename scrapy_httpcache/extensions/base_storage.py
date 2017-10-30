@@ -74,10 +74,11 @@ class BaseStorage(object):
 
     def _gen_mongo_option(self):
         option_prefix = 'HTTPCACHE_MONGODB_OPTIONS_'
-        return '&'.join(
+        res = '&'.join(
             map(lambda x: '{option}={value}'.format(
                 option=x[0].replace(option_prefix, '').lower(),
                 value=x[1]
             ), filter(lambda x: x[0].startswith(option_prefix), self.settings.items()))
         )
+        return '?' + res if res else ''
 
