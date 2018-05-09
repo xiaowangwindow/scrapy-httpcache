@@ -1,3 +1,4 @@
+import inspect
 import logging
 
 from scrapy.settings import Settings
@@ -39,6 +40,11 @@ class BaseStorage(object):
 
     @defer.inlineCallbacks
     def open_spider(self, spider):
+        # input instance of ssl_context_factory as kwargs
+        if inspect.isclass(self.connection_kwargs.get('ssl_context_factory')):
+            self.connection_kwargs['ssl_context_factory'] = \
+                self.connection_kwargs['ssl_context_factory']()
+
         self._db_client = yield ConnectionPool(self.db_uri,
                                                **self.connection_kwargs)
         self._db = self._db_client[self.db_name]
