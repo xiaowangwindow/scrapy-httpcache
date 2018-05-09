@@ -13,6 +13,7 @@ HTTPCACHE_MONGODB_AUTH_DB = None
 HTTPCACHE_MONGODB_DB = 'cache_storage'
 HTTPCACHE_MONGODB_COLL = 'cache'
 HTTPCACHE_MONGODB_COLL_INDEX = [[('fingerprint', 1)]]
+HTTPCACHE_MONGODB_CONNECTION_POOL_KWARGS = {}
 
 BANNED_STORAGE = 'scrapy_httpcache.extensions.banned_storage.MongoBannedStorage'
 BANNED_MONGODB_COLL = 'banned'
