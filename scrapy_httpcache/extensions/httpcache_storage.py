@@ -88,7 +88,7 @@ class MongoDBCacheStorage(BaseStorage):
                 returnValue()
             else:
                 return
-        if 0 < self.expiration_secs < (datetime.datetime.now - data['update_time']).seconds:
+        if 0 < self.expiration_secs < (datetime.datetime.now() - data['update_time']).seconds:
             yield self._coll.delete_one({'fingerprint': key})
             if six.PY2:
                 returnValue()
