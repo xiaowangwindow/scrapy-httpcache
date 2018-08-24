@@ -40,7 +40,8 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'scrapy>=1.4.0'
+        'scrapy>=1.4.0',
+        'txmongo==18.1.0'
     ],
     extras_require=extras_require,
 )
