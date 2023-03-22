@@ -49,7 +49,7 @@ class BaseStorage(object):
                                                **self.connection_kwargs)
         self._db = self._db_client[self.db_name]
         self._coll = self._db[self.coll_name]
-        yield self._coll.find_one(timeout=5)
+        yield self._coll.find_one(timeout=True)
         for index in self.db_index:
             yield self._coll.create_index(qf.sort(index))
         self.logger.info(
